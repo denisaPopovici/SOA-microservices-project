@@ -19,12 +19,12 @@ import java.util.UUID;
 @Transactional
 public class PurchaseService {
     private final PurchaseRepository purchaseRepository;
-    private final WebClient webClient;
+    private final WebClient.Builder webClientBuilder;
 
     @Autowired
-    public PurchaseService(PurchaseRepository purchaseRepository, WebClient webClient) {
+    public PurchaseService(PurchaseRepository purchaseRepository, WebClient.Builder webClientBuilder) {
         this.purchaseRepository = purchaseRepository;
-        this.webClient = webClient;
+        this.webClientBuilder = webClientBuilder;
     }
 
     public void purchase(PurchaseRequest purchaseRequest) throws IllegalAccessException {
@@ -40,8 +40,8 @@ public class PurchaseService {
 
 
         //place order only if the product is in stock
-        InventoryResponse[] inventoryResponseArr = webClient.get()
-                .uri("http://localhost:8082/api/inventory",
+        InventoryResponse[] inventoryResponseArr = webClientBuilder.build().get()
+                .uri("http://inventory-service/api/inventory",
                         uriBuilder -> uriBuilder.queryParam("productCodes", productCodes).build())
                 .retrieve()
                 .bodyToMono(InventoryResponse[].class) //needed in order to read the data
