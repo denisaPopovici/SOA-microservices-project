@@ -7,6 +7,7 @@ import com.soa.OrderServiceApp.model.Purchase;
 import com.soa.OrderServiceApp.model.PurchaseLineItems;
 import com.soa.OrderServiceApp.repository.PurchaseRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -20,11 +21,13 @@ import java.util.UUID;
 public class PurchaseService {
     private final PurchaseRepository purchaseRepository;
     private final WebClient.Builder webClientBuilder;
+    private final KafkaTemplate<String, String> kafkaTemplate;
 
     @Autowired
-    public PurchaseService(PurchaseRepository purchaseRepository, WebClient.Builder webClientBuilder) {
+    public PurchaseService(PurchaseRepository purchaseRepository, WebClient.Builder webClientBuilder, KafkaTemplate<String, String> kafkaTemplate) {
         this.purchaseRepository = purchaseRepository;
         this.webClientBuilder = webClientBuilder;
+        this.kafkaTemplate = kafkaTemplate;
     }
 
     public void purchase(PurchaseRequest purchaseRequest) throws IllegalAccessException {
@@ -50,6 +53,7 @@ public class PurchaseService {
         boolean allProductsInStock = Arrays.stream(inventoryResponseArr).allMatch(InventoryResponse::isInStock);
         if(Boolean.TRUE.equals(allProductsInStock)) {
             purchaseRepository.save(purchase);
+            kafkaTemplate.send("notificationTopic", "Order has been placed successfully!");
         }
         else {
             throw new IllegalAccessException("This product is not currently in stock!");
