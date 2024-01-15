@@ -10,6 +10,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Builder
 public class InventoryResponse {
-    private Long productCode;
+    private String productCode;
     private boolean isInStock;
 }

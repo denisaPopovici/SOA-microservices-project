@@ -1,8 +1,6 @@
 package com.soa.OrderServiceApp.service;
 
-import com.soa.OrderServiceApp.dto.InventoryResponse;
-import com.soa.OrderServiceApp.dto.PurchaseLineItemsDto;
-import com.soa.OrderServiceApp.dto.PurchaseRequest;
+import com.soa.OrderServiceApp.dto.*;
 import com.soa.OrderServiceApp.model.Purchase;
 import com.soa.OrderServiceApp.model.PurchaseLineItems;
 import com.soa.OrderServiceApp.repository.PurchaseRepository;
@@ -36,7 +34,7 @@ public class PurchaseService {
         List<PurchaseLineItems> purchaseLineItemsList = purchaseRequest.getPurchaseLineItemsDtoList().stream().map(this::mapFromDto).toList();
         purchase.setPurchaseLineItemsList(purchaseLineItemsList);
 
-        List<Long> productCodes = purchase.getPurchaseLineItemsList()
+        List<String> productCodes = purchase.getPurchaseLineItemsList()
                 .stream()
                 .map(PurchaseLineItems::getProductCode)
                 .toList();
@@ -66,5 +64,23 @@ public class PurchaseService {
         purchaseLineItems.setQuantity(purchaseLineItemsDto.getQuantity());
         purchaseLineItems.setProductCode((purchaseLineItemsDto.getProductCode()));
         return purchaseLineItems;
+    }
+
+    private PurchaseLineItemsResponseDto mapToDto(PurchaseLineItems purchaseLineItems) {
+        PurchaseLineItemsResponseDto purchaseLineItemsResponseDto = new PurchaseLineItemsResponseDto();
+        purchaseLineItemsResponseDto.setPrice(purchaseLineItems.getPrice());
+        purchaseLineItemsResponseDto.setQuantity(purchaseLineItems.getQuantity());
+        purchaseLineItemsResponseDto.setProductCode((purchaseLineItems.getProductCode()));
+        return purchaseLineItemsResponseDto;
+    }
+
+    private PurchaseResponse mapToPurchaseResponse(Purchase purchase) {
+        return PurchaseResponse.builder()
+                .purchaseLineItemsResponseDtoList(purchase.getPurchaseLineItemsList().stream().map(this::mapToDto).toList())
+                .build();
+    }
+
+    public List<PurchaseResponse> getAllPurchases() {
+        return purchaseRepository.findAll().stream().map(this::mapToPurchaseResponse).toList();
     }
 }

@@ -14,10 +14,10 @@ public class Inventory {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private Long productCode;
+    private String productCode;
     private Integer quantity;
 
-    public Inventory(Long productCode, Integer quantity) {
+    public Inventory(String productCode, Integer quantity) {
         this.productCode = productCode;
         this.quantity = quantity;
     }

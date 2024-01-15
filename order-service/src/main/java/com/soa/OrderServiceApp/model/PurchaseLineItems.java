@@ -14,7 +14,7 @@ public class PurchaseLineItems {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-    private Long productCode;
+    private String productCode;
 
     @Override
     public String toString() {
@@ -31,7 +31,7 @@ public class PurchaseLineItems {
     public PurchaseLineItems() {
     }
 
-    public PurchaseLineItems(Long productCode, Double price, Integer quantity) {
+    public PurchaseLineItems(String productCode, Double price, Integer quantity) {
         this.productCode = productCode;
         this.price = price;
         this.quantity = quantity;

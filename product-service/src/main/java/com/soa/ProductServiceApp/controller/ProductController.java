@@ -14,6 +14,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
+@CrossOrigin
 @RestController
 @RequestMapping("/api/product")
 public class ProductController {
@@ -38,7 +39,6 @@ public class ProductController {
         message.setMessageDate(new Date());
         rabbitTemplate.convertAndSend(MQConfig.EXCHANGE,
                 MQConfig.ROUTING_KEY, message);
-
         return "Message Published";
     }
 

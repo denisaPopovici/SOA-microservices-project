@@ -19,7 +19,7 @@ public class InventoryService {
     }
 
     @Transactional(readOnly = true)
-    public List<InventoryResponse> isInStock(List<Long> productCodes) {
+    public List<InventoryResponse> isInStock(List<String> productCodes) {
         return inventoryRepository.findByProductCodeIn(productCodes).stream()
                 .map(inventory ->
                             InventoryResponse.builder()

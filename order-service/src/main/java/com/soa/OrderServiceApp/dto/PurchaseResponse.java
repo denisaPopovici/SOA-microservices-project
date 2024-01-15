@@ -1,15 +1,16 @@
 package com.soa.OrderServiceApp.dto;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Data
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class PurchaseLineItemsDto {
-    private Long id;
-    private String productCode;
-    private Double price;
-    private Integer quantity;
+public class PurchaseResponse {
+    private List<PurchaseLineItemsResponseDto> purchaseLineItemsResponseDtoList;
 }
